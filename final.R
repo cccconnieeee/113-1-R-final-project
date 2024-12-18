@@ -7,6 +7,34 @@ tidy_survey <- read_csv("國家出口總值排名前30名.csv")
 tidy_survey <- tidy_survey |> 
   select(-ncol(tidy_survey))
 
+# Preserve the data from rows 271 to 300 
+tidy_survey <- tidy_survey |> 
+  slice(271:300)
+
+# Check the updated dataframe
+print(tidy_survey)
+
+library(tidyverse)
+
+# Example dataset
+tidy_survey <- tibble(period = c("民國112年1-12月"))
+
+# Convert `民國112年1-12月` to start and end dates
+tidy_survey <- tidy_survey |> 
+  mutate(
+    # Extract Taiwan year and convert to Western year
+    western_year = as.numeric(str_extract(period, "\\d+")) + 1911,
+    
+    # Create start and end dates
+    start_date = paste0(western_year, "-01-01"),
+    end_date = paste0(western_year, "-12-31")
+  ) |> 
+  select(start_date, end_date) # Keep only the start and end dates
+
+# View the updated data
+print(tidy_survey)
+
+
 # View the updated data
 print(tidy_survey)
 
@@ -18,21 +46,8 @@ tidy_survey <- tidy_survey %>%
     period = 期間,
     rank = 排名,
     country = 國家,
-    `total export value` = `出口總值(新台幣千元)`,
+    `total export value` = `出口總值(新臺幣千元)`,
     percentage = 百分比
-  )
-
-# View the updated column names
-colnames(tidy_survey)
-
-library(tidyverse)
-library(lubridate)
-
-# Convert Taiwan year to Western year and parse the date
-tidy_survey <- tidy_survey %>%
-  mutate(
-    period = str_replace(period, "^(\\d+)", function(x) as.character(as.numeric(x) + 1911)), # Add 1911 to Taiwan year
-    period = ym(period) # Parse the updated period as "YYYY-MM"
   )
 
 # Check the updated period column
@@ -53,10 +68,11 @@ tidy_survey <- tidy_survey %>%
 tidy_survey %>%
   summarise(across(c(period, rank, country, `total export value`, percentage), class))
 
-# <chr> <int> ----
-tidy_survey $ `total export value` >= 10^9
-tidy_survey $ `total export value` < 10^9 & tidy_survey $ `total export value` >= 10^8
-tidy_survey $ `total export value` < 10^8
+
+
+# Ensure `total export value` is numeric for comparisons
+tidy_survey <- tidy_survey |> 
+  mutate(`total export value` = as.numeric(as.character(`total export value`)))
 
 # Filtering total export value into three levels
 tidy_survey |> 
@@ -79,6 +95,10 @@ summary_total_export <- tidy_survey |>
   ) |> 
   count(export_category, name = "count") |> 
   arrange(desc(count))
+
+# View the summary
+print(summary_total_export)
+
 
 # View summary
 print(summary_total_export)
