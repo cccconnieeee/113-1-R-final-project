@@ -16,24 +16,6 @@ print(tidy_survey)
 
 library(tidyverse)
 
-# Example dataset
-tidy_survey <- tibble(period = c("民國112年1-12月"))
-
-# Convert `民國112年1-12月` to start and end dates
-tidy_survey <- tidy_survey |> 
-  mutate(
-    # Extract Taiwan year and convert to Western year
-    western_year = as.numeric(str_extract(period, "\\d+")) + 1911,
-    
-    # Create start and end dates
-    start_date = paste0(western_year, "-01-01"),
-    end_date = paste0(western_year, "-12-31")
-  ) |> 
-  select(start_date, end_date) # Keep only the start and end dates
-
-# View the updated data
-print(tidy_survey)
-
 
 # View the updated data
 print(tidy_survey)
@@ -49,6 +31,9 @@ tidy_survey <- tidy_survey %>%
     `total export value` = `出口總值(新臺幣千元)`,
     percentage = 百分比
   )
+
+
+
 
 # Check the updated period column
 tidy_survey %>%
@@ -100,8 +85,14 @@ summary_total_export <- tidy_survey |>
 print(summary_total_export)
 
 
-# View summary
-print(summary_total_export)
+tidy_survey <- tidy_survey %>%
+  mutate(
+    period = "2023"  
+  )
+
+
+print(tidy_survey)
+
 
 
 
