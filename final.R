@@ -33,8 +33,6 @@ tidy_survey <- tidy_survey %>%
   )
 
 
-
-
 # Check the updated period column
 tidy_survey %>%
   select(period) %>%
@@ -52,7 +50,6 @@ tidy_survey <- tidy_survey %>%
 # Check the updated column classes
 tidy_survey %>%
   summarise(across(c(period, rank, country, `total export value`, percentage), class))
-
 
 
 # Ensure `total export value` is numeric for comparisons
@@ -92,7 +89,4 @@ tidy_survey <- tidy_survey %>%
 
 
 print(tidy_survey)
-
-
-
 
